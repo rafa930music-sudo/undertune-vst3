@@ -5,7 +5,7 @@ on:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
-  workflow_dispatch: # Permite ejecutar la compilación manualmente con 1 clic en GitHub
+  workflow_dispatch:
 
 jobs:
   build-windows-vst3:
@@ -16,34 +16,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup CMake and MSVC
-        uses: lukka/get-cmake@latest
+      - name: Setup MSVC x64 Developer Environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
 
       - name: Configure CMake
-        run: >
-          cmake -B build
-          -G "Visual Studio 17 2022"
-          -A x64
-          -DCMAKE_BUILD_TYPE=Release
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build Undertune VST3
-        run: >
-          cmake --build build
-          --config Release
-          --target Undertune_VST3
-          --parallel
+        run: cmake --build build --config Release --target Undertune_VST3 --parallel
 
       - name: Archive VST3 Plugin
         shell: pwsh
         run: |
-          # Buscar la carpeta generada del VST3
-          $vst3Path = Get-ChildItem -Path build -Recurse -Directory -Filter "Undertune.vst3" | Select-Object -First 1 -ExpandProperty FullName
-          Write-Host "VST3 encontrado en: $vst3Path"
-          
-          # Crear directorio de entrega y comprimir
+          $vst3 = Get-ChildItem -Path build -Recurse -Filter "Undertune.vst3" | Select-Object -First 1 -ExpandProperty FullName
+          Write-Host "VST3 encontrado en: $vst3"
           New-Item -ItemType Directory -Force -Path dist
-          Compress-Archive -Path $vst3Path -DestinationPath "dist/Undertune-VST3-Windows-x64.zip" -Force
-          Write-Host "Archivo zip creado en dist/Undertune-VST3-Windows-x64.zip"
+          Compress-Archive -Path $vst3 -DestinationPath "dist/Undertune-VST3-Windows-x64.zip" -Force
 
       - name: Upload VST3 Artifact
         uses: actions/upload-artifact@v4
