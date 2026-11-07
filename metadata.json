@@ -1,6 +1,0 @@
-{
-  "name": "Undertune - VST3 Pitch Corrector & Cloud Builder",
-  "description": "Auto-Tune vocal pitch correction VST3 plugin suite with autocorrelation DSP, JUCE C++ engine, and cloud automated GitHub Actions CI/CD pipeline.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

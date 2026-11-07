@@ -1,8 +1,16 @@
-node_modules/
+# CMake build directories
 build/
+bin/
 dist/
-coverage/
+*.dir/
+
+# Visual Studio / MSVC artifacts
+.vs/
+*.sln
+*.vcxproj*
+*.user
+*.suo
+
+# Operating System
 .DS_Store
-*.log
-.env*
-!.env.example
+Thumbs.db
